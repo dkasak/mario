@@ -59,8 +59,9 @@ def make_parser():
     ActionObject = Keyword('plumb')('object')
     ActionVerb   = Named(Keyword('run')    |
                          Keyword('notify') |
+                         Keyword('save') |
                          Keyword('download'))('verb')
-    Action       = Named(originalTextFor(OneOrMore(Argument)))('arg')
+    ActionArg       = Named(originalTextFor(ZeroOrMore(Argument)))('arg')
 
     ArgMatchClause  = Group(MatchObject - MatchVerb - Variable - Pattern)
     DataMatchClause = Group(data - MatchVerb - Pattern)
@@ -76,7 +77,7 @@ def make_parser():
 
     KindClause   = Group(KindObject - KindVerb - Kind) - EOL
     MatchClause  = (DataMatchClause | ArgMatchClause)
-    ActionClause = Group(ActionObject - ActionVerb - Action) - EOL
+    ActionClause = Group(ActionObject - ActionVerb - ActionArg) - EOL
 
     MatchBlock  = Group(ZeroOrMore(MatchClause('match-clause')))
     ActionBlock = Group(OneOrMore(ActionClause('action-clause')))
@@ -101,7 +102,7 @@ def make_parser():
     Kind.setName('kind')
     data.setName('object')
     Pattern.setName('pattern')
-    Action.setName('action or url')
+    ActionArg.setName('action argument')
     KindClause.setName('kind clause')
     MatchClause.setName('match clause')
     ActionClause.setName('action clause')

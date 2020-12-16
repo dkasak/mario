@@ -232,6 +232,14 @@ def plumb_notify_func(msg, arguments):
     return True, msg
 
 
+def plumb_save_func(msg, arguments):
+    with tempfile.NamedTemporaryFile("w", prefix="plumber-temp-", delete=False) as f:
+        f.write(msg['data'])
+        msg['data_file'] = f.name
+
+    return True, msg
+
+
 def plumb_download_func(msg, arguments):
     try:
         log_var_references(msg, arguments)
@@ -273,6 +281,7 @@ match_clauses = {
 action_clauses = {
     'plumb run': plumb_run_func,
     'plumb notify': plumb_notify_func,
+    'plumb save': plumb_save_func,
     'plumb download': plumb_download_func,
 }
 
